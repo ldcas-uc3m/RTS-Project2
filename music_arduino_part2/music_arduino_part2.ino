@@ -1,7 +1,7 @@
 /**********************************************************
  *  INCLUDES
  *********************************************************/
-#include "let_it_be_1bit.h"
+#include "let_it_be.h"
 
 /**********************************************************
  *  CONSTANTS
@@ -31,7 +31,7 @@ bool value_old = false;
 /**********************************************************
  * Function: play_bit
  *********************************************************/
-void play_bit() {
+void play_byte() {
   static int bitwise = 1;
   static unsigned char data = 0;
   static int music_count = 0;
@@ -48,11 +48,12 @@ void play_bit() {
           }
        #endif
     }
-    if(mute) { 
+
+    if(mute){ 
         data = 0;
     }
 
-    digitalWrite(SOUND_PIN, (data & bitwise));
+    OCR2A = data;
 }
 
 /**********************************************************
@@ -77,11 +78,20 @@ void setup() {
 	TIMSK1 = _BV(OCIE1A);  // compare with R1A
 
 	OCR1A = CLOCK_SYSTEM/(1 * (1000000 / SAMPLE_TIME)) - 1;  // 3999
+
+    // Timer 2 (PWM for music)
+
+    // init reg.
+    OCR2A = 100;
+    OCR2B = 100;
+
+    TCCR2A = _BV(COM2A1) | _BV(WGM20) | _BV(WGM21);
+    TCCR2B = _BV(CS20);
 }
 
 
 ISR(TIMER1_COMPA_vect) {  // handler
-    play_bit();
+    play_byte();
 }
 
 

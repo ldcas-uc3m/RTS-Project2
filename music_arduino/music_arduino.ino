@@ -22,8 +22,7 @@ unsigned long timeOrig;
 /**********************************************************
  * Function: play_bit
  *********************************************************/
-void play_bit() 
-{
+void play_bit() {
   static int bitwise = 1;
   static unsigned char data = 0;
   static int music_count = 0;
@@ -40,31 +39,31 @@ void play_bit()
           }
        #endif
     }
-    digitalWrite(SOUND_PIN, (data & bitwise) );
+    digitalWrite(SOUND_PIN, (data & bitwise));
 }
 
 /**********************************************************
  * Function: setup
  *********************************************************/
-void setup ()
-{
+void setup() {
     // Initialize serial communications
     Serial.begin(115200);
 
     pinMode(SOUND_PIN, OUTPUT);
-    memset (buffer, 0, BUF_SIZE);
+    memset(buffer, 0, BUF_SIZE);
     timeOrig = micros();    
 }
 
 /**********************************************************
  * Function: loop
  *********************************************************/
-void loop ()
-{
+void loop() {
     unsigned long timeDiff;
 
     play_bit();
+
     timeDiff = SAMPLE_TIME - (micros() - timeOrig);
     timeOrig = timeOrig + SAMPLE_TIME;
+
     delayMicroseconds(timeDiff);
 }

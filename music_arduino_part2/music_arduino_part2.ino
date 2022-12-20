@@ -32,22 +32,18 @@ bool value_old = false;
  * Function: play_bit
  *********************************************************/
 void play_byte() {
-  static int bitwise = 1;
-  static unsigned char data = 0;
-  static int music_count = 0;
+	static int bitwise = 1;
+	static unsigned char data = 0;
+	static int music_count = 0;
 
-    bitwise = (bitwise * 2);
-    if (bitwise > 128) {
-       bitwise = 1;
-       #ifdef TEST_MODE 
-          data = pgm_read_byte_near(music + music_count);
-          music_count = (music_count + 1) % MUSIC_LEN;
-       #else 
-          if (Serial.available()>1) {
-             data = Serial.read();
-          }
-       #endif
-    }
+	#ifdef TEST_MODE 
+	  data = pgm_read_byte_near(music + music_count);
+	  music_count = (music_count + 1) % MUSIC_LEN;
+	#else 
+	  if (Serial.available()>1) {
+		 data = Serial.read();
+	  }
+	#endif
 
     if(mute){ 
         data = 0;
